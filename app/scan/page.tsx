@@ -82,7 +82,21 @@ const mockNfcApi = {
 };
 
 // Simulated API call to fetch item data
-const fetchItemData = (nfcData) => {
+// Define the type for nfcData
+interface NFCData {
+  tagId: string;
+  tokenId: string;
+  readCount: number;
+  signalStrength?: number;
+  lastScanTime?: string;
+  tagVersion?: string;
+  tagHealth?: string;
+  encryptionStatus?: string;
+  tamperEvidence?: boolean;
+}
+
+// Update the function signature with the type
+const fetchItemData = (nfcData: NFCData) => {
   return new Promise((resolve) => {
     // Simulate API delay
     setTimeout(() => {
