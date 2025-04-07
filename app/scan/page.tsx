@@ -147,8 +147,8 @@ export default function ScanPage() {
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
   const [addedToCollection, setAddedToCollection] = useState(false);
   
-  const progressInterval = useRef(null);
-  
+  const progressInterval = useRef<NodeJS.Timeout | null>(null);
+  const signalInterval = useRef<NodeJS.Timeout | null>(null);
   // Check if device supports NFC on component mount
   useEffect(() => {
     const checkNfcSupport = async () => {
