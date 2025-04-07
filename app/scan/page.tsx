@@ -151,17 +151,15 @@ export default function ScanPage() {
   const signalInterval = useRef<NodeJS.Timeout | null>(null);
   // Check if device supports NFC on component mount
   useEffect(() => {
-    const checkNfcSupport = async () => {
-      const isSupported = mockNfcApi.isSupported();
-      setNfcSupported(isSupported);
-      
-      if (!isSupported) {
-        setErrorMessage("Your device doesn't support NFC scanning. Please try on a different device.");
-      }
-    };
-    
-    checkNfcSupport();
-  }, []);
+  return () => {
+    if (progressInterval.current) { // Add null check here
+      clearInterval(progressInterval.current);
+    }
+    if (signalInterval.current) { // Add null check here
+      clearInterval(signalInterval.current);
+    }
+  };
+}, []);
   
   // Clean up intervals on unmount
   useEffect(() => {
@@ -191,16 +189,15 @@ export default function ScanPage() {
       setScanProgress(0);
       
       // Simulate progress
-      progressInterval.current = setInterval(() => {
-        setScanProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(progressInterval.current);
-            return 100;
-          }
-          return prev + 2;
-        });
-      }, 50);
-      
+     setScanProgress(prev => {
+  if (prev >= 100) {
+   clearInterval(progressInterval.current);
+    }
+    return 100;
+  }
+  return prev + 2;
+});
+
       // Scan NFC tag
       const nfcData = await mockNfcApi.scanTag();
       
@@ -224,9 +221,12 @@ export default function ScanPage() {
   };
   
   const resetScan = () => {
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current);
-    }
+  if (progressInterval.current) { // Add null check here
+    clearInterval(progressInterval.current);
+  }
+  if (signalInterval.current) { // Add null check here
+    clearInterval(signalInterval.current);
+  }
     setScanStatus("idle");
     setScanProgress(0);
     setItemData(null);
